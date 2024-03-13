@@ -1,0 +1,92 @@
+#!/usr/bin/env python
+
+import os, sys, subprocess, shlex, argparse
+from collections import defaultdict
+from Bio import SeqIO
+
+def run_program(core_genome, genome_folder):
+	core2genome = dict()
+	core2seqs = defaultdict(list)
+	###Getting amino acid alignments
+	for file in os.listdir(core_genome):
+		if file.endswith(".faa"):
+			core_gene = file.replace(".faa","")
+			file_path = os.path.join(core_genome, file)
+			output = file_path.replace(".faa",".aln.prot")
+
+			for record in SeqIO.parse(file_path, "fasta"):
+				seq_name = str(record.id).split("&")
+				protein_name = seq_name[1]
+				genome_name = seq_name[0].replace(".faa", "")
+				core2genome[protein_name] = genome_name
+				core2seqs[core_gene].append(protein_name)
+			cmd = "/overflow/bobaylab/carolina/mafft-7.505-with-extensions/scripts/mafft --auto "+ file_path 
+			cmd2 = shlex.split(cmd)
+			print("Running: ",cmd)
+			subprocess.call(cmd2, stdout=open(output, "a"), stderr=open("log_file.txt", "a"))
+
+	for file in os.listdir(core_genome):
+		if file.endswith(".aln.prot"):
+			file_path = os.path.join(core_genome, file)
+			output = file_path.replace(".aln.prot",".aln.seq")
+
+			all_seqs = list()
+			for record in SeqIO.parse(file_path, "fasta"):
+				name = str(record.id).split("&")
+				genome_name = name [0].replace(".faa","")
+				record.id = genome_name
+				record.description = ""
+				all_seqs.append(record)
+			SeqIO.write(all_seqs, output, "fasta")
+			os.remove(file_path)
+
+	###Finding nuc sequences that are part of the core genome
+	all_genomes_seqs = dict()
+	for file in os.listdir(genome_folder):
+		if file.endswith(".genes.fna"):
+			file_path = os.path.join(genome_folder, file)
+			
+			for record in SeqIO.parse(file_path, "fasta"):
+				seq_name = str(record.id)
+				all_genomes_seqs[seq_name] = record
+
+	###Getting nucleotide sequences for each core gene
+	for key, value in core2seqs.items():
+		all_seqs = list()
+		output = os.path.join(core_genome, key + ".genes.fna")
+		for i in value:
+			seq_record = all_genomes_seqs[i]
+			seq_record.description = ""
+			seq_record.id = str(core2genome[i])
+			all_seqs.append(seq_record)
+
+		SeqIO.write(all_seqs, output, "fasta")
+
+	###Getting codon alignments with PAL2NAL
+	for file in os.listdir(core_genome):
+		if file.endswith(".aln.seq"):
+			input_alignment = os.path.join(core_genome, file)
+			genes_seq = input_alignment.replace(".aln.seq",".genes.fna")
+			output_pal2nal = input_alignment.replace(".aln.seq",".pal2nal")
+
+			cmd = "perl /overflow/bobaylab/carolina/pal2nal.v14/pal2nal.pl " + input_alignment + " " + genes_seq + " -output paml -nogap"
+			print ("Running: ",cmd)
+			cmd2 = shlex.split(cmd)
+			subprocess.call(cmd2, stdout = open(output_pal2nal, "w"), stderr = open("error_pal2nal.txt", "w"))
+
+def main(argv=None):
+	args_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description="INFO:\nThis script will build individual codon core-genome alignments with the extension .pal2nal.", epilog='*******************************************************************\n\n*******************************************************************\n\nMake sure you cite MAFFT, PAL2NAL, and our book chapter!')
+	args_parser.add_argument('-c', '--core', required=True, help='Input folder where core genome files are located/Corecruncher output files. Your output files will be located here!')
+	args_parser.add_argument('-g', '--genomes', required=True, help='Folder where genome files (.fna) and Prodigal output files are located.')
+	args_parser = args_parser.parse_args()
+
+	#Setting up parameters
+	core_genome = args_parser.core
+	genome_folder = args_parser.genomes
+	
+	run_program(core_genome, genome_folder)
+	return 0
+
+if __name__ == '__main__':
+	status = main()
+	sys.exit(status)
