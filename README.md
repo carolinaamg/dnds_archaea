@@ -4,4 +4,4 @@ This repository provides a step-by-step guide to estimate the dN/dS ratio on pro
 
 Moreover, this repository provides example input files to go from genome files to the final statistical analyses to compare two models.  
 
-## This repository is part of the book chapter: "Title".
+## This repository is part of the book chapter: "Title", where we provide a detailed summary of the scripts to estimate dN/dS.
