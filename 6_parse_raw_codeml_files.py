@@ -163,8 +163,6 @@ def main(argv=None):
     extension = args_parser.ext
     
     parse_dnds(input_folder, output, extension)
-    return 0
 
 if __name__ == '__main__':
     status = main()
-    sys.exit(status)
