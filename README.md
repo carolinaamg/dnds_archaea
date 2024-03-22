@@ -9,7 +9,6 @@ Once downloaded, .tar.gz can be unzipped as follows:
 
 ``
 tar -xzvf Methanosarcina_genus_genomes.tar.gz  
-
 tar -xzvf Methanosarcina_mazei_genomes.tar.gz
 ``  
 
