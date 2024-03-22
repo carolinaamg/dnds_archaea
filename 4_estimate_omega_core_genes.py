@@ -3,7 +3,7 @@
 import os, sys, re, argparse
 from Bio.Phylo.PAML import codeml
 
-def run_program(input_dir, tree, extension, model, nssites, clean):
+def run_codeml(input_dir, tree, extension, model, nssites, clean):
 	for file in os.listdir(input_dir):
 		if file.endswith(".pal2nal"):
 			alignment = os.path.join(input_dir,file)
@@ -60,7 +60,7 @@ def main(argv=None):
 	nssites = args_parser.nssites
 	clean = args_parser.clean
 	
-	run_program(input_dir, tree, extension, model, nssites, clean)
+	run_codeml(input_dir, tree, extension, model, nssites, clean)
 	return 0
 
 if __name__ == '__main__':
