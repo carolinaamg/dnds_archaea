@@ -20,4 +20,4 @@ tar -xzvf Methanosarcina_mazei_genomes.tar.gz
 
 _In our tutorial, the resulting folders will be your input folders._
 
-#### This repository is part of the book chapter: "Title", where we provide a detailed summary of the scripts shown above and a step-by-step tutorial to estimate dN/dS on the example genome files.
+#### This repository is part of the book chapter: "Title", where we provide a detailed summary of the scripts shown above and a step-by-step tutorial to estimate dN/dS with the example genome files.
