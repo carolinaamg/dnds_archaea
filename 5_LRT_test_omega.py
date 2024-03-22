@@ -8,7 +8,6 @@ import scipy
 from statsmodels.sandbox.stats.multicomp import multipletests
 
 def lrt_test(input_dir, null_ext, alt_ext, df, alpha):
-	null2lnl = dict()
 	alternative2lnl = dict()
 	for file in os.listdir(input_dir):
 		if file.endswith(alt_ext):
