@@ -85,8 +85,6 @@ def main(argv=None):
 	genome_folder = args_parser.genomes
 	
 	codon_alignment(core_genome, genome_folder)
-	return 0
 
 if __name__ == '__main__':
 	status = main()
-	sys.exit(status)
