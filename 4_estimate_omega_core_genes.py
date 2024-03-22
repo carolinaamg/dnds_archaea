@@ -3,7 +3,7 @@
 import os, sys, re, argparse
 from Bio.Phylo.PAML import codeml
 
-def run_codeml(input_dir, tree, extension, model, nssites, clean):
+def run_codeml(input_dir, tree, extension, model, nssites, clean, rubbish):
 	for file in os.listdir(input_dir):
 		if file.endswith(".pal2nal"):
 			alignment = os.path.join(input_dir,file)
@@ -20,7 +20,7 @@ def run_codeml(input_dir, tree, extension, model, nssites, clean):
 			cml.working_dir = input_dir
 
 	 		#Setting options
-			cml.set_options(noisy=1) #Limited information on screen 
+			cml.set_options(noisy=rubbish) #Limited information on screen 
 			cml.set_options(verbose=1) #Details of output file
 			cml.set_options(seqtype=1) #Analysis on codons
 			cml.set_options(ndata = 1) #Number of alignments
@@ -50,6 +50,7 @@ def main(argv=None):
 	args_parser.add_argument('-m', '--model', required=False, default=int(0), help='Model for omega estimation. Default value is 0, meaning that all branches have the same rate.')
 	args_parser.add_argument('-n', '--nssites', required=False, default=int(0), help='NSsites option available to estimate omega. Default value is 0, meaning that codons in the alignment have the same rate.')
 	args_parser.add_argument('-c', '--clean', required=False, default=int(0), help='Do you expect your data to have a lot of gaps and/or ambiguous sites? yes? use -c 1, no? use default value -c 0.')
+	args_parser.add_argument('-r', '--rubbish', required=False, default=int(0), help='From 0 to 3, how much rubbish do you want on your screen? Pick a number! (default is 0).')
 	args_parser = args_parser.parse_args()
 
 	#Setting up parameters to run omega
@@ -59,8 +60,9 @@ def main(argv=None):
 	model = int(args_parser.model)
 	nssites = args_parser.nssites
 	clean = args_parser.clean
+	rubbish = int(args_parser.rubbish)
 	
-	run_codeml(input_dir, tree, extension, model, nssites, clean)
+	run_codeml(input_dir, tree, extension, model, nssites, clean, rubbish)
 
 if __name__ == '__main__':
 	status = main()
