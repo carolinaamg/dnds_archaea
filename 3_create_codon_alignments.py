@@ -27,7 +27,7 @@ def codon_alignment(core_genome, genome_folder, quiet):
 				cmd = "mafft --auto --quiet "+ file_path 
 			cmd2 = shlex.split(cmd)
 			print("Running: ",cmd)
-			subprocess.call(cmd2, stdout=open(output, "a"), stderr=open("log_file.txt", "a"))
+			subprocess.call(cmd2, stdout=open(output, "a"), stderr=open("mafft_log.txt", "a"))
 
 	for file in os.listdir(core_genome):
 		if file.endswith(".aln.prot"):
@@ -76,7 +76,7 @@ def codon_alignment(core_genome, genome_folder, quiet):
 			cmd = "perl pal2nal.pl " + input_alignment + " " + genes_seq + " -output paml -nogap"
 			print ("Running: ",cmd)
 			cmd2 = shlex.split(cmd)
-			subprocess.call(cmd2, stdout = open(output_pal2nal, "w"), stderr = open("error_pal2nal.txt", "w"))
+			subprocess.call(cmd2, stdout = open(output_pal2nal, "w"), stderr = open("pal2nal_log.txt", "w"))
 
 def main(argv=None):
 	args_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description="INFO:\nThis script will build individual codon core-genome alignments with the extension .pal2nal. Make sure you have MAFFT install, and edit Line 72 of this script to add the absolute path of the pal2nal binary.", epilog='*******************************************************************\n\n*******************************************************************\n\nMake sure you cite MAFFT, PAL2NAL, and our book chapter!')
