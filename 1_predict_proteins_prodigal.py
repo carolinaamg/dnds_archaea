@@ -17,7 +17,7 @@ def predict_proteins(input_dir,outfolder, quiet):
 				cmd = "prodigal -i "+ fasta +" -a "+ prot +" -d "+ nucl + " -q"
 			print (cmd)
 			cmd2 = shlex.split(cmd)
-			subprocess.call(cmd2, stdout=open("prodigal.out", "w"), stderr=open("prodigal.err", "w"))
+			subprocess.call(cmd2, stdout=open("prodigal_log.out", "w"), stderr=open("prodigal.err", "w"))
 
 	print("DONE.")
 
