@@ -73,13 +73,13 @@ def codon_alignment(core_genome, genome_folder, quiet):
 			genes_seq = input_alignment.replace(".aln.seq",".genes.fna")
 			output_pal2nal = input_alignment.replace(".aln.seq",".pal2nal")
 
-			cmd = "perl pal2nal.pl " + input_alignment + " " + genes_seq + " -output paml -nogap"
+			cmd = "pal2nal " + input_alignment + " " + genes_seq + " -output paml -nogap"
 			print ("Running: ",cmd)
 			cmd2 = shlex.split(cmd)
 			subprocess.call(cmd2, stdout = open(output_pal2nal, "w"), stderr = open("pal2nal_log.txt", "w"))
 
 def main(argv=None):
-	args_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description="INFO:\nThis script will build individual codon core-genome alignments with the extension .pal2nal. Make sure you have MAFFT install, and edit Line 72 of this script to add the absolute path of the pal2nal binary.", epilog='*******************************************************************\n\n*******************************************************************\n\nMake sure you cite MAFFT, PAL2NAL, and our book chapter!')
+	args_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description="INFO:\nThis script will build individual codon core-genome alignments with the extension .pal2nal. Make sure you have MAFFT and PAL2NAL installed.", epilog='*******************************************************************\n\n*******************************************************************\n\nMake sure you cite MAFFT, PAL2NAL, and our book chapter!')
 	args_parser.add_argument('-c', '--core', required=True, help='Input folder where core genome files are located/Corecruncher output files. Your output files will be located here!')
 	args_parser.add_argument('-g', '--genomes', required=True, help='Folder where genome files (.fna) and Prodigal output files are located.')
 	args_parser.add_argument('-q', '--quiet', required=False, default=int(1), help='Run MAFFT quietly? yes? use 0, no? use 1. Default is 1.')
