@@ -4,8 +4,6 @@ import os
 import sys
 import re
 import argparse
-import statsmodels.api as sm
-import pandas as pd
 import scipy
 from statsmodels.sandbox.stats.multicomp import multipletests
 
