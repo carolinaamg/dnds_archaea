@@ -1,4 +1,4 @@
-## Estimation of the ratio of synonymous and non-synonymous substitutions of protein-coding genes.
+## A workflow for estimating the ratio of non-synonymous to synonymous substitutions in core protein-coding genes
 
 This repository provides a step-by-step guide to estimate the dN/dS ratio on protein-coding genes of archeal genomes. This framework is applicable to bacteria.  
 
