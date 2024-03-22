@@ -103,8 +103,6 @@ def main(argv=None):
 	output = args_parser.output
 	
 	conc_alignment(core_genome, genome_folder, output)
-	return 0
 
 if __name__ == '__main__':
 	status = main()
-	sys.exit(status)
