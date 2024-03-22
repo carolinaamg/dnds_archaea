@@ -5,7 +5,7 @@ import os
 from collections import defaultdict
 import sys
 
-def run_program(input_folder, output, ext):
+def parse_dnds(input_folder, output, ext):
     # Get list of all infiles.
     files = os.listdir(input_folder)
     files = [f for f in files if f.endswith(ext)]
@@ -162,7 +162,7 @@ def main(argv=None):
     output = args_parser.output
     extension = args_parser.ext
     
-    run_program(input_folder, output, extension)
+    parse_dnds(input_folder, output, extension)
     return 0
 
 if __name__ == '__main__':
