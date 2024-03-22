@@ -61,8 +61,6 @@ def main(argv=None):
 	clean = args_parser.clean
 	
 	run_codeml(input_dir, tree, extension, model, nssites, clean)
-	return 0
 
 if __name__ == '__main__':
 	status = main()
-	sys.exit(status)
