@@ -4,7 +4,7 @@ import os, sys, subprocess, shlex, argparse
 from collections import defaultdict
 from Bio import SeqIO
 
-def run_program(core_genome, genome_folder):
+def codon_alignment(core_genome, genome_folder):
 	core2genome = dict()
 	core2seqs = defaultdict(list)
 	###Getting amino acid alignments
@@ -20,7 +20,7 @@ def run_program(core_genome, genome_folder):
 				genome_name = seq_name[0].replace(".faa", "")
 				core2genome[protein_name] = genome_name
 				core2seqs[core_gene].append(protein_name)
-			cmd = "/overflow/bobaylab/carolina/mafft-7.505-with-extensions/scripts/mafft --auto "+ file_path 
+			cmd = "mafft --auto "+ file_path 
 			cmd2 = shlex.split(cmd)
 			print("Running: ",cmd)
 			subprocess.call(cmd2, stdout=open(output, "a"), stderr=open("log_file.txt", "a"))
@@ -69,13 +69,13 @@ def run_program(core_genome, genome_folder):
 			genes_seq = input_alignment.replace(".aln.seq",".genes.fna")
 			output_pal2nal = input_alignment.replace(".aln.seq",".pal2nal")
 
-			cmd = "perl /overflow/bobaylab/carolina/pal2nal.v14/pal2nal.pl " + input_alignment + " " + genes_seq + " -output paml -nogap"
+			cmd = "perl pal2nal.pl " + input_alignment + " " + genes_seq + " -output paml -nogap"
 			print ("Running: ",cmd)
 			cmd2 = shlex.split(cmd)
 			subprocess.call(cmd2, stdout = open(output_pal2nal, "w"), stderr = open("error_pal2nal.txt", "w"))
 
 def main(argv=None):
-	args_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description="INFO:\nThis script will build individual codon core-genome alignments with the extension .pal2nal.", epilog='*******************************************************************\n\n*******************************************************************\n\nMake sure you cite MAFFT, PAL2NAL, and our book chapter!')
+	args_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description="INFO:\nThis script will build individual codon core-genome alignments with the extension .pal2nal. Make sure you have MAFFT install, and edit Line 72 of this script to add the absolute path of the pal2nal binary.", epilog='*******************************************************************\n\n*******************************************************************\n\nMake sure you cite MAFFT, PAL2NAL, and our book chapter!')
 	args_parser.add_argument('-c', '--core', required=True, help='Input folder where core genome files are located/Corecruncher output files. Your output files will be located here!')
 	args_parser.add_argument('-g', '--genomes', required=True, help='Folder where genome files (.fna) and Prodigal output files are located.')
 	args_parser = args_parser.parse_args()
@@ -84,7 +84,7 @@ def main(argv=None):
 	core_genome = args_parser.core
 	genome_folder = args_parser.genomes
 	
-	run_program(core_genome, genome_folder)
+	codon_alignment(core_genome, genome_folder)
 	return 0
 
 if __name__ == '__main__':
