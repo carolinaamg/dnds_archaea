@@ -93,8 +93,6 @@ def main(argv=None):
 	alpha = float(args_parser.alpha)
 	
 	lrt_test(input_dir, null, alternative, df, alpha)
-	return 0
 
 if __name__ == '__main__':
 	status = main()
-	sys.exit(status)
