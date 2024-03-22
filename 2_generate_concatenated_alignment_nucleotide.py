@@ -60,7 +60,7 @@ def conc_alignment(core_genome, genome_folder, output_alignment, quiet):
 				cmd = "mafft --auto --quiet "+ file_path 
 			cmd2 = shlex.split(cmd)
 			print("Running: ",cmd)
-			subprocess.call(cmd2, stdout=open(output, "a"), stderr=open("log_file.txt", "a"))
+			subprocess.call(cmd2, stdout=open(output, "a"), stderr=open("mafft_log.txt", "a"))
 
 	###Concatenating nucleotide sequences
 	genome2seqs = defaultdict(list)
