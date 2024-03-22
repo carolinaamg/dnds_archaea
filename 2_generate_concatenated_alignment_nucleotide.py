@@ -4,7 +4,7 @@ import os, sys, subprocess, shlex, argparse
 from collections import defaultdict
 from Bio import SeqIO
 
-def conc_alignment(core_genome, genome_folder, output_alignment):
+def conc_alignment(core_genome, genome_folder, output_alignment, quiet):
 	###Getting a nucleotide file for each core gene
 	aminoacid_seqs = defaultdict(list)
 	genome_list = list()
@@ -53,7 +53,11 @@ def conc_alignment(core_genome, genome_folder, output_alignment):
 		if file.endswith(".fna"):
 			file_path = os.path.join(core_genome, file)
 			output = file_path.replace(".fna",".aln")
-			cmd = "mafft --auto "+ file_path 
+			
+			if quiet == 1:
+				cmd = "mafft --auto "+ file_path 
+			else:
+				cmd = "mafft --auto --quiet "+ file_path 
 			cmd2 = shlex.split(cmd)
 			print("Running: ",cmd)
 			subprocess.call(cmd2, stdout=open(output, "a"), stderr=open("log_file.txt", "a"))
@@ -95,14 +99,16 @@ def main(argv=None):
 	args_parser.add_argument('-c', '--core', required=True, help='Input folder where core genome files are located/Corecruncher output files.')
 	args_parser.add_argument('-g', '--genomes', required=True, help='Folder where genome files (.fna) and Prodigal output files are located.')
 	args_parser.add_argument('-o', '--output', required=True, help='Your output concatenated alignment.')
+	args_parser.add_argument('-q', '--quiet', required=False, default=int(1), help='Run MAFFT quietly? yes? use 0, no? use 1. Default is 1.')
 	args_parser = args_parser.parse_args()
 
 	#Setting up parameters
 	core_genome = args_parser.core
 	genome_folder = args_parser.genomes
 	output = args_parser.output
+	quiet = int(args_parser.quiet)
 	
-	conc_alignment(core_genome, genome_folder, output)
+	conc_alignment(core_genome, genome_folder, output, quiet)
 
 if __name__ == '__main__':
 	status = main()
