@@ -9,8 +9,10 @@ Once downloaded, .tar.gz can be unzipped as follows:
 
 ``
 tar -xzvf Methanosarcina_genus_genomes.tar.gz  
+
 tar -xzvf Methanosarcina_mazei_genomes.tar.gz
-``
+``  
+
 In our tutorial, the resulting folders will be your input folders. 
 
 ## This repository is part of the book chapter: "Title", where we provide a detailed summary of the scripts and a step-by-step tutorial to estimate dN/dS.
