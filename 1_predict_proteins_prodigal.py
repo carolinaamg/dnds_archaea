@@ -28,8 +28,6 @@ def main(argv=None):
 	input_dir = args_parser.input
 	
 	predict_proteins(input_dir)
-	return 0
 
 if __name__ == '__main__':
 	status = main()
-	sys.exit(status)
