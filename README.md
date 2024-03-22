@@ -8,7 +8,11 @@ Input example files can be found on the following Zenodo repository: https://zen
 Once downloaded, .tar.gz can be unzipped as follows:
 
 ``
-tar -xzvf Methanosarcina_genus_genomes.tar.gz    
+tar -xzvf Methanosarcina_genus_genomes.tar.gz 
+``
+and
+
+``
 tar -xzvf Methanosarcina_mazei_genomes.tar.gz
 ``  
 
