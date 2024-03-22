@@ -4,7 +4,7 @@ import os, sys, subprocess, shlex, argparse
 from collections import defaultdict
 from Bio import SeqIO
 
-def run_program(core_genome, genome_folder, output_alignment):
+def conc_alignment(core_genome, genome_folder, output_alignment):
 	###Getting a nucleotide file for each core gene
 	aminoacid_seqs = defaultdict(list)
 	genome_list = list()
@@ -53,7 +53,7 @@ def run_program(core_genome, genome_folder, output_alignment):
 		if file.endswith(".fna"):
 			file_path = os.path.join(core_genome, file)
 			output = file_path.replace(".fna",".aln")
-			cmd = "/overflow/bobaylab/carolina/mafft-7.505-with-extensions/scripts/mafft --auto "+ file_path 
+			cmd = "mafft --auto "+ file_path 
 			cmd2 = shlex.split(cmd)
 			print("Running: ",cmd)
 			subprocess.call(cmd2, stdout=open(output, "a"), stderr=open("log_file.txt", "a"))
@@ -91,7 +91,7 @@ def run_program(core_genome, genome_folder, output_alignment):
 	print("Concatenated alignment", output, "is ready!")
 
 def main(argv=None):
-	args_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description="INFO:\nThis script will build a nucleotide core-genome concatenated alignment for phylogenetic reconstruction.", epilog='*******************************************************************\n\n*******************************************************************\n\nMake sure you cite MAFFT and our book chapter!')
+	args_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description="INFO:\nThis script will build a nucleotide core-genome concatenated alignment for phylogenetic reconstruction. Make sure you have MAFFT installed!", epilog='*******************************************************************\n\n*******************************************************************\n\nMake sure you cite MAFFT and our book chapter!')
 	args_parser.add_argument('-c', '--core', required=True, help='Input folder where core genome files are located/Corecruncher output files.')
 	args_parser.add_argument('-g', '--genomes', required=True, help='Folder where genome files (.fna) and Prodigal output files are located.')
 	args_parser.add_argument('-o', '--output', required=True, help='Your output concatenated alignment.')
@@ -102,7 +102,7 @@ def main(argv=None):
 	genome_folder = args_parser.genomes
 	output = args_parser.output
 	
-	run_program(core_genome, genome_folder, output)
+	conc_alignment(core_genome, genome_folder, output)
 	return 0
 
 if __name__ == '__main__':
