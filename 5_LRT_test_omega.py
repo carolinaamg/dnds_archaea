@@ -9,7 +9,7 @@ import pandas as pd
 import scipy
 from statsmodels.sandbox.stats.multicomp import multipletests
 
-def run_program(input_dir, null_ext, alt_ext, df, alpha):
+def lrt_test(input_dir, null_ext, alt_ext, df, alpha):
 	null2lnl = dict()
 	alternative2lnl = dict()
 	for file in os.listdir(input_dir):
@@ -92,7 +92,7 @@ def main(argv=None):
 	df = int(args_parser.df)
 	alpha = float(args_parser.alpha)
 	
-	run_program(input_dir, null, alternative, df, alpha)
+	lrt_test(input_dir, null, alternative, df, alpha)
 	return 0
 
 if __name__ == '__main__':
