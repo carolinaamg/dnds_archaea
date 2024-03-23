@@ -5,6 +5,7 @@ import os
 from collections import defaultdict
 import sys
 
+
 def parse_dnds(input_folder, output, ext):
     # Get list of all infiles.
     files = os.listdir(input_folder)
@@ -14,7 +15,7 @@ def parse_dnds(input_folder, output, ext):
     if len(files) == 0:
         print('No files found with extension:', ext, file=sys.stderr)
         sys.exit(1)
-    
+
     # Make output directory, unless it exists.
     if not os.path.exists(output):
         os.makedirs(output)
@@ -30,6 +31,7 @@ def parse_dnds(input_folder, output, ext):
     just_parsed_counts = False
     next_line_is_poly_breakdown = False
     tree_next = False
+    poly_breakdown_length = None
 
     for f in files:
 
@@ -49,9 +51,9 @@ def parse_dnds(input_folder, output, ext):
 
                 if len(line_split) == 0:
                     continue
-                
+
                 if next_line_is_poly_breakdown:
-                    if len(line_split) == poly_breakdown_length:
+                    if poly_breakdown_length is not None and len(line_split) == poly_breakdown_length:
                         all_pos = ''.join(line_split[1:])
                         seq_poly_pos = set([i for i, x in enumerate(all_pos) if x != '.'])
                         poly_pos[input_name] = poly_pos[input_name].union(seq_poly_pos)
@@ -106,7 +108,7 @@ def parse_dnds(input_folder, output, ext):
             loci_w_missing_info.add(locus)
         elif summary_tab[locus]['num_compare'] == 0:
             loci_w_missing_info.add(locus)
-    
+
     if len(loci_w_missing_info) > 0:
         print('Loci with missing info: ' + ', '.join(sorted(list(loci_w_missing_info))), file=sys.stderr)
 
@@ -151,18 +153,22 @@ def parse_dnds(input_folder, output, ext):
 
 
 def main(argv=None):
-    args_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description="INFO:\nThis script will parse raw CODEML output files for further analysis.", epilog='*******************************************************************\n\n*******************************************************************\n\nMake sure you cite our book chapter!')
+    args_parser = argparse.ArgumentParser(
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        description="INFO:\nThis script will parse raw CODEML output files for further analysis.",
+        epilog='*******************************************************************\n\n*******************************************************************\n\nMake sure you cite our book chapter!')
     args_parser.add_argument('-i', '--input', required=True, help='Input folder where codeml output files are located.')
     args_parser.add_argument('-o', '--output', required=True, help='Folder where output files will go.')
-    args_parser.add_argument('-e', '--ext', required=False, default= ".cml.out", help='Extension of codeml output files. Default is .cml.out.')
+    args_parser.add_argument('-e', '--ext', required=False, default=".cml.out", help='Extension of codeml output files. Default is .cml.out.')
     args_parser = args_parser.parse_args()
 
-    #Setting up parameters
+    # Setting up parameters.
     input_folder = args_parser.input
     output = args_parser.output
     extension = args_parser.ext
-    
+
     parse_dnds(input_folder, output, extension)
+
 
 if __name__ == '__main__':
     status = main()
