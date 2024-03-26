@@ -73,7 +73,7 @@ def codon_alignment(core_genome, genome_folder, quiet):
 			genes_seq = input_alignment.replace(".aln.seq",".genes.fna")
 			output_pal2nal = input_alignment.replace(".aln.seq",".pal2nal")
 
-			cmd = "pal2nal " + input_alignment + " " + genes_seq + " -output paml -nogap"
+			cmd = "pal2nal.pl " + input_alignment + " " + genes_seq + " -output paml -nogap"
 			print ("Running: ",cmd)
 			cmd2 = shlex.split(cmd)
 			subprocess.call(cmd2, stdout = open(output_pal2nal, "w"), stderr = open("pal2nal_log.txt", "w"))
