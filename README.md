@@ -2,11 +2,11 @@
 
 ### Introduction
 
-This repository provides a step-by-step guide to estimate the dN/dS ratio on protein-coding genes of archeal genomes. This framework is applicable to bacteria.
+This repository provides a step-by-step guide to estimate the dN/dS ratio on protein-coding genes of archeal genomes. This framework is also applicable to bacteria.
 
 Moreover, this repository provides example input files to go from genome files to the final statistical analyses to compare two models.
 
-Input example files (genomes) can be found in the following Zenodo repository: https://zenodo.org/records/10854407
+Input example files (genomes and a formatted tree) can be found in the following Zenodo repository: https://zenodo.org/records/10854407
 
 *This repository is part of the book chapter: "Title", where we provide a detailed summary of the scripts shown above and a step-by-step tutorial to estimate dN/dS with the example genome files.*
 
@@ -63,7 +63,7 @@ ln -s $PWD/usearch6.1.XX /path/to/envs/dnds_workflow/bin/usearch61
 
 The following commands will illustrate how to run this workflow on the _Methanosarina barkeri_ vs. _Methanosarcina mazei_ comparison described in our chapter. This workflow will be conducted in `tutorial_working`.
 
-0. Download the genome FASTAs and species tree (in newick format), and extract the genomes.
+#### 0. Download the genome FASTAs and species tree (in newick format), and extract the genomes.
 
 ```
 mkdir tutorial_working
@@ -79,7 +79,7 @@ wget https://zenodo.org/records/10854407/files/test_tree.nwk?download=1 \
 tar -xzvf Methanosarcina_genus_genomes.tar.gz
 ```
 
-1. Call core genes and build alignment
+#### 1. Call core genes and build alignment
 
 First, run `1_predict_proteins_prodigal.py` to wrap [Prodigal](https://github.com/hyattpd/Prodigal) to call genes across these genomes:
 
@@ -100,11 +100,14 @@ python /path/to/corecruncher_master.py \
 	-ext .faa \
 	-freq 100 \
 	-score 80 \
-	-length 80
+	-length 80 \
+	-ref GCA_000979125.1_gtlEnvA5udCFS_genomic.faa
 ```
 
+Note that we specified the reference genome's protein set to use as pivot genome, to ensure the analysis returns identical results to ours (otherwise the first genome alphabetically will be used).
 
-2. Build concatenated core genome alignment and tree.
+
+#### 2. Build concatenated core genome alignment and tree.
 
 First, generate core gene alignment with MAFFT:
 ```
@@ -127,7 +130,7 @@ raxmlHPC \
 ```
 
 
-3. Create codon alignment for each core gene.
+#### 3. Create codon alignment for each core gene.
 ```
 3_create_codon_alignments.py \
 	-c corecruncher_out/core \
@@ -135,7 +138,7 @@ raxmlHPC \
 ```
 
 
-4. Run CodeML on all call genes to estimate omega under two models
+#### 4. Run CodeML on all call genes to estimate omega under two models
 
 Note that this requires specifying the "input branch" lineage.
 
@@ -167,7 +170,7 @@ After the above finishes, also run:
 The above commands will produce CODEML output files for each gene family in `corecruncher_out/core`. Output files corresponding to the null model fits will end in `.null`, while those corresponding to fitting  the two models will be `.alt`.
 
 
-5. Run likelihood-ratio test to test for differences in omega between _Methanosarina barkeri_ and _Methanosarcina mazei_.
+#### 5. Run likelihood-ratio test to test for differences in omega between _Methanosarina barkeri_ and _Methanosarcina mazei_.
 
 
 ```
@@ -195,7 +198,7 @@ Significant core genes indicate those where separate omega values for the two te
 This step will not be appropriate for every analysis, as it is hard-coded for this particular comparison. However, the code could be altered to conduct similar analyses with different datasets.
 
 
-6. Generate overall summaries.
+#### 6. Generate overall summaries.
 
 The raw CODEML output can be difficult to parse. To get the output in a more user-friendly format, you can run these two commands:
 
@@ -211,6 +214,8 @@ The raw CODEML output can be difficult to parse. To get the output in a more use
 	-e .alt
 ```
 
+Note that this script also will not work for any arbitrary CODEML output (e.g., if more than two omega values are fit), but can be the basis for further adjustments.
+
 This will create three outputs for the genes fit with the null and alternative models, respectively: a table giving the per-branch parameter estimates, the trees for each gene, and a table of overall summary values. These will be output within the new folders `null_codeml_summary` and `alt_codeml_summary`.
 
 
@@ -224,3 +229,5 @@ fam1006 4.37718 0.09050 0.1140  1.2595  254.0   97.0    66
 ```
 
 Each row is a separate gene, and the columns correspodn to the estimated kappa and omega parameters, as well as the observed dN and dS substitution rates (summed over all branches). The mean number of sites where non-synonymous (mean_N) and synonymous (mean_S) substitutions can occur across all sequences is also indicated. Last, "num_polymorphic_sites" indicates the total number of independent sites across all input sequences that vary, which can be a useful metric for filtering out genes with insufficient variation.
+
+The output for the alternative model fit will include a separate column for each omega value (omega1 and omega2).

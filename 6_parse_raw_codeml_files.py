@@ -73,8 +73,11 @@ def parse_dnds(input_folder, output, ext):
                     poly_breakdown_length = len(line_split)
                 elif line_split[0] == 'kappa':
                     summary_tab[input_name]['kappa'] = line_split[3]
-                elif line_split[0] == 'omega':
+                elif line_split[0] == 'omega' or line_split[0] == 'w':
                     summary_tab[input_name]['omega'] = line_split[3]
+                elif line.startswith("w (dN/dS) for branches:"):
+                    summary_tab[input_name]['omega1'] = line_split[-2]
+                    summary_tab[input_name]['omega2'] = line_split[-1]
                 elif line.startswith('tree length for dN:'):
                     summary_tab[input_name]['total_dN'] = line_split[-1]
                 elif line.startswith('tree length for dS:'):
@@ -104,8 +107,10 @@ def parse_dnds(input_folder, output, ext):
     for locus in summary_tab:
         if 'kappa' not in summary_tab[locus]:
             loci_w_missing_info.add(locus)
-        elif 'omega' not in summary_tab[locus]:
+        elif 'omega' not in summary_tab[locus] and ('omega1' not in summary_tab[locus] or 'omega2' not in summary_tab[locus]):
             loci_w_missing_info.add(locus)
+        elif 'omega' in summary_tab[locus] and 'omega1' in summary_tab[locus] and 'omega2' in summary_tab[locus]:
+            sys.exit('Error: Both omega and omega1/omega2 found for locus ' + locus)
         elif summary_tab[locus]['num_compare'] == 0:
             loci_w_missing_info.add(locus)
 
@@ -114,8 +119,13 @@ def parse_dnds(input_folder, output, ext):
 
     # Write output.
     with open(os.path.join(output, 'summary_tab.tsv'), 'w') as outfile:
-        summary_header = '\t'.join(['locus', 'kappa', 'omega', 'total_dN', 'total_dS', 'mean_N', 'mean_S',
-                                    'num_polymorphic_sites'])
+
+        if 'omega1' not in summary_tab[locus]:
+            summary_header = '\t'.join(['locus', 'kappa', 'omega', 'total_dN', 'total_dS', 'mean_N', 'mean_S',
+                                        'num_polymorphic_sites'])
+        else:
+            summary_header = '\t'.join(['locus', 'kappa', 'omega1', 'omega2', 'total_dN', 'total_dS', 'mean_N', 'mean_S',
+                                        'num_polymorphic_sites'])
         outfile.write(summary_header + '\n')
 
         for locus in sorted(summary_tab.keys()):
@@ -129,9 +139,14 @@ def parse_dnds(input_folder, output, ext):
 
             num_polymorphisms = str(len(poly_pos[locus]))
 
+            if 'omega' in summary_tab[locus]:
+                omega = summary_tab[locus]['omega']
+            else:
+                omega = summary_tab[locus]['omega1'] + '\t' + summary_tab[locus]['omega2']
+
             summary_line = '\t'.join([locus,
                                       summary_tab[locus]['kappa'],
-                                      summary_tab[locus]['omega'],
+                                      omega,
                                       summary_tab[locus]['total_dN'],
                                       summary_tab[locus]['total_dS'],
                                       mean_N,
