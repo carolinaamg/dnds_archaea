@@ -6,7 +6,7 @@ Moreover, this repository provides example input files to go from genome files t
 
 Input example files (genomes) can be found in the following Zenodo repository: https://zenodo.org/records/10854407
 
-Once downloaded, your .tar.gz can be unzipped as follows:
+Once downloaded, your .tar.gz files can be unzipped as follows:
 
 ``
 tar -xzvf Methanosarcina_genus_genomes.tar.gz 
