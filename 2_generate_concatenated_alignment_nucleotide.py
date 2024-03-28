@@ -92,7 +92,7 @@ def conc_alignment(core_genome, genome_folder, output_alignment, quiet):
 		output_alignment.write(all_seqs + "\n")
 	output_alignment.close()
 
-	print("Concatenated alignment", output, "is ready!")
+	print("Concatenated alignment", output_alignment, "is ready!")
 
 def main(argv=None):
 	args_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description="INFO:\nThis script will build a nucleotide core-genome concatenated alignment for phylogenetic reconstruction. Make sure you have MAFFT installed!", epilog='*******************************************************************\n\n*******************************************************************\n\nMake sure you cite MAFFT and our book chapter!')
