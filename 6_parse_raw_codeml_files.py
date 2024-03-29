@@ -73,7 +73,7 @@ def parse_dnds(input_folder, output, ext):
                     poly_breakdown_length = len(line_split)
                 elif line_split[0] == 'kappa':
                     summary_tab[input_name]['kappa'] = line_split[3]
-                elif line_split[0] == 'omega' or line_split[0] == 'w':
+                elif line_split[0] == 'omega':
                     summary_tab[input_name]['omega'] = line_split[3]
                 elif line.startswith("w (dN/dS) for branches:"):
                     summary_tab[input_name]['omega1'] = line_split[-2]
