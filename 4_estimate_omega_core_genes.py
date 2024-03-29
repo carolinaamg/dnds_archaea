@@ -3,10 +3,11 @@
 import os, sys, re, argparse
 from Bio.Phylo.PAML import codeml
 
-def run_codeml(input_dir, tree, extension, model, nssites, clean, rubbish):
+def run_codeml(input_dir, extension, model, nssites, clean, rubbish):
 	for file in os.listdir(input_dir):
 		if file.endswith(".pal2nal"):
 			alignment = os.path.join(input_dir,file)
+			tree = alignment.replace(".pal2nal", ".nwk")
 			codeml_output = re.sub(".pal2nal", extension, alignment)
 			core_gene = file.replace(".pal2nal","")
 			print("Your input files are: ", alignment, "and", tree)
@@ -45,8 +46,7 @@ def run_codeml(input_dir, tree, extension, model, nssites, clean, rubbish):
 def main(argv=None):
 	args_parser = argparse.ArgumentParser(formatter_class=argparse.RawDescriptionHelpFormatter, description="INFO: \n script to estimate dN/dS a.k.a omega values on codon alignemnts.", epilog='*******************************************************************\n\n*******************************************************************\n\nMake sure you cite PAML and our book chapter!')
 	args_parser.add_argument('-i', '--input', required=True, help='Input folder of codon alignments (ending in .pal2nal, obtained using PAL2NAL).')
-	args_parser.add_argument('-t', '--tree', required=True, help='Input phylogenetic tree.')
-	args_parser.add_argument('-e', '--extension', required=True, help='Extension of output file (e.g., .cml.out).')
+	args_parser.add_argument('-e', '--extension', required=True, help='Extension of output files (e.g., .cml.out).')
 	args_parser.add_argument('-m', '--model', required=False, default=int(0), help='Model for omega estimation. Default value is 0, meaning that all branches have the same rate.')
 	args_parser.add_argument('-n', '--nssites', required=False, default=int(0), help='NSsites option available to estimate omega. Default value is 0, meaning that codons in the alignment have the same rate.')
 	args_parser.add_argument('-c', '--clean', required=False, default=int(0), help='Do you expect your data to have a lot of gaps and/or ambiguous sites? yes? use -c 1, no? use default value -c 0.')
@@ -55,14 +55,13 @@ def main(argv=None):
 
 	#Setting up parameters to run omega
 	input_dir = args_parser.input
-	tree = args_parser.tree
 	extension = str(args_parser.extension)
 	model = int(args_parser.model)
 	nssites = args_parser.nssites
 	clean = args_parser.clean
 	rubbish = int(args_parser.rubbish)
 	
-	run_codeml(input_dir, tree, extension, model, nssites, clean, rubbish)
+	run_codeml(input_dir, extension, model, nssites, clean, rubbish)
 
 if __name__ == '__main__':
 	status = main()
