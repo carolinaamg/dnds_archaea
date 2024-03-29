@@ -109,32 +109,20 @@ Note that we specified the reference genome's protein set to use as pivot genome
 
 #### 2. Build concatenated core genome alignment and tree.
 
-First, generate core gene alignment with MAFFT:
+Generate core gene alignments and phylogenies with MAFFT and Fasttree:
 ```
-2_generate_concatenated_alignment_nucleotide.py \
+2_generate_gene_trees_core_genome.py \
 	-c corecruncher_out/core \
 	-g prodigal_out \
-	-o Methanosarcina_core.aln
+	-ib ingroup_branch \
+	--quiet 1
 ```
-
-Then, build tree with RAxML:
-```
-raxmlHPC \
-	-f a \
-	-x 12345 \
-	-p 12345 \
-	-# 100 \
-	-m GTRGAMMA \
-	-s Methanosarcina_core.aln \
-	-n Methanosarcina_core
-```
-
 
 #### 3. Create codon alignment for each core gene.
 ```
 3_create_codon_alignments.py \
 	-c corecruncher_out/core \
-	-g prodigal_out
+	--quiet 1
 ```
 
 
@@ -149,7 +137,6 @@ Note that the below commands run CODEML serially on each gene (i.e., one at a ti
 ```
 4_estimate_omega_core_genes.py \
 	-i corecruncher_out/core \
-	-t test_tree.nwk \
 	-e .null \
 	-m 0 \
 	-n 0 \
@@ -160,7 +147,6 @@ After the above finishes, also run:
 ```
 4_estimate_omega_core_genes.py \
 	-i corecruncher_out/core \
-	-t test_tree.nwk \
 	-e .alt \
 	-m 2 \
 	-n 0 \
