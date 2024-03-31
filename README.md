@@ -106,9 +106,9 @@ python /path/to/corecruncher_master.py \
 Note that we specified the reference genome's protein set to use as pivot genome, to ensure the analysis returns identical results to ours (otherwise the first genome alphabetically will be used).
 
 
-#### 2. Build concatenated core genome alignment and tree.
+#### 2. Build core gene alignments and phylogenetic trees.
 
-Generate core gene alignments and phylogenies with MAFFT and Fasttree:
+Generate core gene alignments and phylogenies with MAFFT and FastTree:
 ```
 2_generate_gene_trees_core_genome.py \
 	-c Methanosarcina_genus_genomes_out/core \
