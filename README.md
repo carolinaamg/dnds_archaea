@@ -96,12 +96,11 @@ Then run `CoreCruncher` to identify core genes:
 ```
 python /path/to/corecruncher_master.py \
 	-in prodigal_out \
-	-out corecruncher_out \
+	-out Methanosarcina_genus_genomes_out \
 	-ext .faa \
 	-freq 100 \
 	-score 80 \
 	-length 80 \
-	-ref GCA_000979125.1_gtlEnvA5udCFS_genomic.faa
 ```
 
 Note that we specified the reference genome's protein set to use as pivot genome, to ensure the analysis returns identical results to ours (otherwise the first genome alphabetically will be used).
@@ -112,8 +111,8 @@ Note that we specified the reference genome's protein set to use as pivot genome
 Generate core gene alignments and phylogenies with MAFFT and Fasttree:
 ```
 2_generate_gene_trees_core_genome.py \
-	-c corecruncher_out/core \
-	-g prodigal_out \
+	-c Methanosarcina_genus_genomes_out/core \
+	-g Methanosarcina_genus_genomes \
 	-ib ingroup_branch \
 	--quiet 1
 ```
@@ -121,7 +120,7 @@ Generate core gene alignments and phylogenies with MAFFT and Fasttree:
 #### 3. Create codon alignment for each core gene.
 ```
 3_create_codon_alignments.py \
-	-c corecruncher_out/core \
+	-c Methanosarcina_genus_genomes_out/core \
 	--quiet 1
 ```
 
@@ -136,7 +135,7 @@ Note that the below commands run CODEML serially on each gene (i.e., one at a ti
 
 ```
 4_estimate_omega_core_genes.py \
-	-i corecruncher_out/core \
+	-i Methanosarcina_genus_genomes_out/core \
 	-e .null \
 	-m 0 \
 	-n 0 \
@@ -146,7 +145,7 @@ Note that the below commands run CODEML serially on each gene (i.e., one at a ti
 After the above finishes, also run:
 ```
 4_estimate_omega_core_genes.py \
-	-i corecruncher_out/core \
+	-i Methanosarcina_genus_genomes_out/core \
 	-e .alt \
 	-m 2 \
 	-n 0 \
@@ -161,7 +160,7 @@ The above commands will produce CODEML output files for each gene family in `cor
 
 ```
 5_LRT_test_omega.py \
-	-i corecruncher_out/core \
+	-i Methanosarcina_genus_genomes_out/core \
 	-n .null \
 	-a .alt \
 	-df 1 \
