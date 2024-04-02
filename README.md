@@ -6,7 +6,7 @@ This repository provides a step-by-step guide to estimate the dN/dS ratio on pro
 
 Moreover, this repository provides example input files to go from genome files to the final statistical analyses to compare two models.
 
-Input example files (genomes and a formatted tree) can be found in the following Zenodo repository: (https://doi.org/10.5281/zenodo.10892728)
+Input example files (genomes and a formatted tree) can be found in the following Zenodo repository: https://doi.org/10.5281/zenodo.10892728
 
 *This repository is part of the book chapter: "Title", where we provide a detailed summary of the scripts shown above and a step-by-step tutorial to estimate dN/dS with the example genome files.*
 
